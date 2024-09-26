@@ -7,6 +7,7 @@ const api = require("./api")
 const app = express()
 const path = require("path");
 
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 /* connection mongoDB */
 const mongoose = require("mongoose")
@@ -28,14 +29,13 @@ app.use((req, res, next) => {
 })
 
 // Middleware CORS
-app.use(cors({
-  origin: 'http://thomasguyot.local:8080' // Changez ceci si nécessaire
-}));
+// app.use(cors({
+//   origin: 'http://thomasguyot.local:8080' // Changez ceci si nécessaire
+// }));
 
 app.use(bodyParser.json())
 app.use(morgan(':method :url :status :response-time ms :date :referrer'))
 app.use("/api", api)
-app.use("/images", express.static(path.join(__dirname, "images")));
 
 
 module.exports = app

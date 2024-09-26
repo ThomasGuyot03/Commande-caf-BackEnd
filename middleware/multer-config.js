@@ -1,4 +1,5 @@
 const multer = require("multer");
+const path = require("path");
 
 const MIME_TYPES = {
   "image/jpg": "jpg",
@@ -12,10 +13,15 @@ const storage = multer.diskStorage({
     callback(null, "images");
   },
   filename: (req, file, callback) => {
-    console.log('test', file)
+    // Remplace les espaces par des underscores
     const name = file.originalname.split(" ").join("_");
-    const extension = MIME_TYPES[file.mimetype];
-    callback(null, name + Date.now() + "." + extension);
+    
+    // Extraire l'extension de fichier à partir du nom original
+    const extension = path.extname(name).toLowerCase(); // Ex: .jpg
+    const baseName = path.basename(name, extension); // Ex: mon_image
+
+    // Création d'un nom de fichier unique
+    callback(null, baseName + "_" + Date.now() + extension); // Ex: mon_image_123456789.jpg
   },
 });
 

@@ -34,15 +34,22 @@ function templateOrder(products, totalPrice) {
 }
 
 async function getTransporterMail() {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'guillaumeleger430@gmail.com',
-          pass: process.env.GMAIL_PASS
-        }
-    })
-    return transporter
+    try {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'datcommande@gmail.com',
+                pass: process.env.GMAIL_PASS
+            }
+        });
+        return transporter;
+    } catch (error) {
+        console.error('Error creating transporter:', error);
+        throw error;   
+    }
 }
+
+
 
 
 module.exports = { getTotalPrice, templateOrder, getTransporterMail }

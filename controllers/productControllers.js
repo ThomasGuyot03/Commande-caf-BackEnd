@@ -3,20 +3,19 @@ const { getfilter } = require("../middleware/filtre");
 
 // CREATE PRODUCT //
 exports.createProduct = async (req, res, next) => {
-    const { title, category, accountId, stock, description } = req.body;
+    const { name, category, accountId, stock, description } = req.body;
     
     // Vérification des champs requis
-    if (!title || !category || !accountId) {
+    if (!name || !category || !accountId) {
         return res.status(400).json({ error: 'Merci de remplir tous les champs requis.' });
     }
 
     try {
         // Si un fichier est uploadé, utiliser son chemin d'accès, sinon laisser la valeur par défaut
         const picture = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
-
         // Création du produit
         const product = await models.Product.create({
-            name: title, // Modification ici
+            name,
             picture, // Image optionnelle
             category,
             accountId,
