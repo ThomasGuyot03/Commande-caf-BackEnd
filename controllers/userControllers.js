@@ -33,8 +33,8 @@ exports.signup = async (req, res, next) => {
             password: hash,
             isAdmin: false,
             accountId: req.body.accountId,
-            company: req.body.company,
-            address: req.body.address // Ajout de l'adresse
+            company: req.body.company || null,
+            address: req.body.address 
         });
 
         return res.status(201).json(newUser);
@@ -58,13 +58,6 @@ exports.login = async (req, res, next) => {
         if (!valid)
             return res.status(401).json({ error: 'Adresse mail ou mot de passe incorrect.' })
         
-        // userData = {
-        //     userId: user.id,
-        //     firstname: user.firstname,
-        //     name: user.firstname,
-        //     email: user.firstname,
-        //     isAdmin: user.isAdmin,
-        // }
         return res.status(200).json({
             token: jwt.sign({ userId: user.id, isAdmin: user.isAdmin }, process.env.TOKEN_SECRET, { expiresIn: '24h'})
         })

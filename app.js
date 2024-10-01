@@ -19,6 +19,7 @@ try {
   console.log("Connexion à MongoDB réussie !")
 } catch (error) {
   console.error("Connexion à MongoDB échouée :", error)
+  process.exit(1); 
 }
 
 app.use((req, res, next) => {

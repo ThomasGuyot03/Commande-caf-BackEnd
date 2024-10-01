@@ -12,9 +12,11 @@ const parseCategories = value => {
 }
 
 const CATEGORY_MAP = {
-    1: 'Smartphone',
-    2: 'Laptop',
-    3: 'TV'
+  1: 'Café',
+  2: 'Thé',
+  3: 'Lait',
+  4: 'Cappuccino',
+  5: 'Accessoires'
 }
   
 const mapCategoryNumberToName = (categoryNumber) => {
