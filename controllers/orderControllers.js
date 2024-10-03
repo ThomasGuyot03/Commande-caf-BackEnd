@@ -5,36 +5,58 @@ const cryptoJS = require("crypto-js")
 const { getTotalPrice, templateOrder, getTransporterMail } = require("../middleware/function")
 
 // CREATE ORDER //
+// CREATE ORDER //
 exports.createOrder = async (req, res, next) => {
-    const { cart } = req.body
+    const { cart } = req.body;
     if (req.body.user === "" || cart.products.length === 0)
-        return res.status(400).json({ error: 'Merci de remplir tous les champs.' })
+        return res.status(400).json({ error: 'Merci de remplir tous les champs.' });
 
-    const { name, email, address } = req.body.user
-    const totalPrice = getTotalPrice(cart)
+    const { name, email, address } = req.body.user;
+    const totalPrice = getTotalPrice(cart);
 
     try {
+        // Vérifier et décrémenter le stock pour chaque produit avant de créer la commande
+        for (const item of cart.products) {
+            const product = await models.Product.findById(item._id);
+
+            if (!product) {
+                return res.status(404).json({ error: `Produit ${item.name} introuvable.` });
+            }
+
+            // Vérifie s'il y a assez de stock
+            if (product.stock < item.quantity) {
+                return res.status(400).json({ error: `Stock insuffisant pour le produit ${item.name}.` });
+            }
+
+            // Décrémente le stock
+            product.stock -= item.quantity;
+            await product.save();
+        }
+
+        // Créer la commande après mise à jour du stock
         const order = await models.Order.create({
             user: { name, email, address },
             products: cart.products,
-        })
+        });
 
-        let template = templateOrder(cart.products, totalPrice)
-        const transporter = await getTransporterMail()
+        // Envoi de l'email de confirmation
+        let template = templateOrder(cart.products, totalPrice);
+        const transporter = await getTransporterMail();
         const mailOptions = {
-            from: 'guillaumeleger430@gmail.com',
+            from: 'datcommande@gmail.com',
             to: email,
             subject: 'Confirmation de commande',
-            html: template
-        }
-        transporter.sendMail(mailOptions)
+            html: template,
+        };
+        transporter.sendMail(mailOptions);
 
-        return res.status(200).json(order)
+        return res.status(200).json(order);
     } catch (error) {
-        console.log('error =>', error)
-        return res.status(400).json({ error: error.message })
+        console.log('error =>', error);
+        return res.status(400).json({ error: error.message });
     }
-}
+};
+
 
 // UPDATE ORDER //
 exports.updateOrder = async (req, res, next) => {
