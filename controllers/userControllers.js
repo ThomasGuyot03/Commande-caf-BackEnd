@@ -141,6 +141,7 @@ exports.getUser = async (req, res, next) => {
 // GET USERS BY ACCOUNT ID //
 exports.getAllUsers = async (req, res, next) => {
     const { accountId } = req.query; 
+    console.log('test accountId',accountId)
     try {
         const users = await models.User.find({ accountId }); 
         return res.status(200).json(users); 

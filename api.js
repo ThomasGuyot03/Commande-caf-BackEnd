@@ -39,7 +39,7 @@ router.post('/check-products', productControllers.checkProducts);
 router.post('/orders/create', auth, orderControllers.createOrder);
 router.patch('/orders/update/:id', auth, isAdmin, orderControllers.updateOrder);
 router.delete('/orders/delete/:id', auth, isAdmin, orderControllers.deleteOrder);
-router.get('/orders', auth, orderControllers.getAllOrder);
+router.get('/orders', auth, isAdmin, orderControllers.getAllOrder);
 router.get('/orders/:id', auth, orderControllers.getOneOrder);
 
 // PROMO //

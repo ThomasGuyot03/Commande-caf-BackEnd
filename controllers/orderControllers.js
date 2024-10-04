@@ -75,15 +75,15 @@ exports.deleteOrder = async (req, res, next) => {
 
 // GET ALL ORDERS //
 exports.getAllOrder = async (req, res, next) => {
-    console.log('Requête reçue pour /orders');
-    const User = req.user
+    const User = req.userId
     let query = {}
+    console.log('test user',User)
     if (!User.isAdmin) {
-        query.user = User.id
+        query.user = User
     }
     try {
-        const orders = await models.Order.find(query)
-        console.log('Données des commandes récupérées:', orders) // Ajouter ce log
+        const orders = await models.Order.find()
+        console.log('Données des commandes récupérées:', orders) 
         return res.status(200).json(orders)
     } catch (error) {
         return res.status(400).json({ error: error.message })
