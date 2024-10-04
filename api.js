@@ -23,6 +23,7 @@ router.delete('/user/delete/:id', auth, userControllers.deleteUser);
 router.patch('/user/update/:id', auth, userControllers.updateUser);
 router.get('/user/:id', auth, userControllers.getUser);
 router.get('/users', auth, userControllers.getAllUsers); 
+router.get('/user/profile', auth, userControllers.getProfile); 
 router.post('/user/reset-password', userControllers.resetPassword);
 router.post('/user/reset-password/:id', userControllers.resetPasswordId);
 

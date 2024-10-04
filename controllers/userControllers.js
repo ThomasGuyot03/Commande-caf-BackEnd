@@ -149,6 +149,35 @@ exports.getAllUsers = async (req, res, next) => {
     }
 }
 
+// GET PROFILE OF CURRENT USER
+exports.getProfile = async (req, res, next) => {
+    try {
+        const userId = req.userId; // L'ID de l'utilisateur est récupéré à partir du middleware d'authentification
+        const user = await models.User.findOne({ _id: userId });
+        
+        if (!user) {
+            return res.status(404).json({ error: 'Utilisateur introuvable.' });
+        }
+
+        // Prépare la réponse avec les informations de l'utilisateur
+        let userResponse = { 
+            id: user.id, 
+            email: user.email,
+            name: user.name,
+            firstname: user.firstname,
+            address:  user.address,
+            company: user.company,
+            phone: user.phone,
+            isAdmin: user.isAdmin
+        };
+
+        return res.status(200).json(userResponse);
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+
 
 // GET USER //
 exports.resetPassword = async (req, res, next) => {
