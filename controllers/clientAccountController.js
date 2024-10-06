@@ -14,7 +14,6 @@ exports.getAllClientAccounts = async (req, res) => {
 // Récupérer un compte client par ID
 exports.getAccountById = async (req, res) => {
     // const accountId = req.params.id;
-    console.log('test', req.query)
     try {
         const account = await models.User.findOne({ accountId: req.params.id }); 
         if (!account) {

@@ -45,7 +45,6 @@ exports.signup = async (req, res, next) => {
 
 // LOGIN //
 exports.login = async (req, res, next) => {
-    console.log('test')
     try {
         if (req.body.email == null || req.body.password == null)
             return res.status(400).json({ error: 'Merci de remplir tous les champs.' })
@@ -141,7 +140,6 @@ exports.getUser = async (req, res, next) => {
 // GET USERS BY ACCOUNT ID //
 exports.getAllUsers = async (req, res, next) => {
     const { accountId } = req.query; 
-    console.log('test accountId',accountId)
     try {
         const users = await models.User.find({ accountId }); 
         return res.status(200).json(users); 

@@ -77,7 +77,6 @@ exports.deleteOrder = async (req, res, next) => {
 exports.getAllOrder = async (req, res, next) => {
     const User = req.userId
     let query = {}
-    console.log('test user',User)
     if (!User.isAdmin) {
         query.user = User
     }
