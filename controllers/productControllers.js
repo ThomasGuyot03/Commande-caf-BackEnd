@@ -1,11 +1,12 @@
 const models = require("../models/models");
 const { getfilter } = require("../middleware/filtre");
+const { findAccount } = require("../middleware/account");
 
 // CREATE PRODUCT //
 exports.createProduct = async (req, res, next) => {
     const { name, category, stock, description } = req.body;
-    const accountId = req.accountId
-    console.log('req',accountId)
+    const accountId = findAccount(req)
+
     // Vérification des champs requis
     if (!name || !category) {
         return res.status(400).json({ error: 'Merci de remplir tous les champs requis.' });
@@ -86,7 +87,8 @@ exports.getAllProducts = async (req, res, next) => {
         const totalPages = Math.ceil(totalItems / limit);
         
         // Récupérer les données filtrées et paginées
-        const products = await models.Product.find({accountId: req.query.accountId})
+        const accountId = findAccount(req)
+        const products = await models.Product.find({accountId: accountId})
             .sort(sort)
             .skip((page - 1) * limit)
             .limit(limit);

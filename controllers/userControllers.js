@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const models = require("../models/models")
 const { getTransporterMail } = require("../middleware/function")
+const { findAccount } = require("../middleware/account")
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!.@#$%^&*])(?=.{8,})/
@@ -12,7 +13,6 @@ exports.signup = async (req, res, next) => {
     try {
         if (Object.values(req.body).some(value => !value))
             return res.status(400).json({ error: 'Merci de remplir tous les champs.' });
-  
         if (!EMAIL_REGEX.test(req.body.email))
             return res.status(400).json({ error: 'Email incorrect.' });
   
@@ -24,15 +24,15 @@ exports.signup = async (req, res, next) => {
             return res.status(401).json({ error: 'Minimum: 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère (!.@#$%^&*)' });
 
         const hash = await bcrypt.hash(req.body.password, 10);
-        
         // Création du nouvel utilisateur avec les détails d'adresse
+        const accountId = findAccount(req)
         let newUser = await models.User.create({
             email: req.body.email,
             name: req.body.name,
             firstname: req.body.firstname,
             password: hash,
             isAdmin: false,
-            accountId: req.body.accountId,
+            accountId: accountId,
             company: req.body.company || null,
             address: req.body.address 
         });
@@ -48,12 +48,8 @@ exports.login = async (req, res, next) => {
     try {
         if (req.body.email == null || req.body.password == null)
             return res.status(400).json({ error: 'Merci de remplir tous les champs.' })
-        let accountId 
-        if (req.headers.origin === "http://thomasguyot.local:8080") {
-            accountId = "66e964f0c8bf10e1ef23bb9b" 
-        } else if (req.headers.origin === "http://commandedat.netlify.app") {
-            accountId = "66e964aec8bf10e1ef23bb9a"
-        }
+        const accountId = findAccount(req)
+        
         const user = await models.User.findOne({ email: req.body.email, accountId: accountId })
         if (!user)
             return res.status(404).json({ error: 'Adresse mail ou mot de passe incorrect.' })
@@ -144,7 +140,7 @@ exports.getUser = async (req, res, next) => {
 
 // GET USERS BY ACCOUNT ID //
 exports.getAllUsers = async (req, res, next) => {
-    const { accountId } = req.query; 
+    const accountId = findAccount(req)
     try {
         const users = await models.User.find({ accountId }); 
         return res.status(200).json(users); 
