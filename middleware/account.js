@@ -1,4 +1,4 @@
-const findAccount = async (origin) => {
+const findAccount = (origin) => {
     let accountId 
     if (origin.headers.origin === "http://thomasguyot.local:8080") {
         accountId = "66e964f0c8bf10e1ef23bb9b" 

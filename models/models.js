@@ -40,6 +40,7 @@ const productSchema = mongoose.Schema(
 const orderSchema = mongoose.Schema(
     {
         products: [{ type: Object }],
+        accountId: { type: String },
         user: {
             type: Object,
             properties: {

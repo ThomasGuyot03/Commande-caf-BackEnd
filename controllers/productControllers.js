@@ -78,17 +78,21 @@ function sleep(ms) {
 
 // GET ALL PRODUCTS //
 exports.getAllProducts = async (req, res, next) => {
-    const { page, limit } = req.query;
+    const { page, limit, category } = req.query;
     // Obtenir les éléments filtrés dans la table
     const { filter, sort } = await getfilter(req, 'Product');
+    // console.log('test filtre',filter)
+    const accountId = findAccount(req)
+    let filters = { accountId }
+    if (category !== '') filters.category = category
+    
     try {
         // Obtenir le nombre total d'éléments filtrés dans la table
         const totalItems = await models.Product.countDocuments(filter);
         const totalPages = Math.ceil(totalItems / limit);
         
         // Récupérer les données filtrées et paginées
-        const accountId = findAccount(req)
-        const products = await models.Product.find({accountId: accountId})
+        const products = await models.Product.find(filters)
             .sort(sort)
             .skip((page - 1) * limit)
             .limit(limit);

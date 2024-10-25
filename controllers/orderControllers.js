@@ -3,6 +3,7 @@ const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 const stripe = require('stripe')(stripeSecretKey)
 const cryptoJS = require("crypto-js")
 const { getTotalPrice, templateOrder, getTransporterMail } = require("../middleware/function")
+const { findAccount } = require("../middleware/account")
 
 // CREATE ORDER //
 exports.createOrder = async (req, res, next) => {
@@ -14,9 +15,11 @@ exports.createOrder = async (req, res, next) => {
     const totalPrice = getTotalPrice(cart)
 
     try {
+        const accountId = findAccount(req)
         const order = await models.Order.create({
             user: { name, email, address },
             products: cart.products,
+            accountId
         })
 
         let template = templateOrder(cart.products, totalPrice)
@@ -81,7 +84,8 @@ exports.getAllOrder = async (req, res, next) => {
         query.user = User
     }
     try {
-        const orders = await models.Order.find()
+        const accountId = findAccount(req)
+        const orders = await models.Order.find({accountId: accountId})
         console.log('Données des commandes récupérées:', orders) 
         return res.status(200).json(orders)
     } catch (error) {
