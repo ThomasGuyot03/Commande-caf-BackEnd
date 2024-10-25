@@ -3,10 +3,11 @@ const { getfilter } = require("../middleware/filtre");
 
 // CREATE PRODUCT //
 exports.createProduct = async (req, res, next) => {
-    const { name, category, accountId, stock, description } = req.body;
-    
+    const { name, category, stock, description } = req.body;
+    const accountId = req.accountId
+    console.log('req',accountId)
     // Vérification des champs requis
-    if (!name || !category || !accountId) {
+    if (!name || !category) {
         return res.status(400).json({ error: 'Merci de remplir tous les champs requis.' });
     }
 

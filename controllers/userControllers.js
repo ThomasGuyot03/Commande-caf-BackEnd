@@ -48,8 +48,13 @@ exports.login = async (req, res, next) => {
     try {
         if (req.body.email == null || req.body.password == null)
             return res.status(400).json({ error: 'Merci de remplir tous les champs.' })
-  
-        const user = await models.User.findOne({ email: req.body.email })
+        let accountId 
+        if (req.headers.origin === "http://thomasguyot.local:8080") {
+            accountId = "66e964f0c8bf10e1ef23bb9b" 
+        } else if (req.headers.origin === "http://commandedat.netlify.app") {
+            accountId = "66e964aec8bf10e1ef23bb9a"
+        }
+        const user = await models.User.findOne({ email: req.body.email, accountId: accountId })
         if (!user)
             return res.status(404).json({ error: 'Adresse mail ou mot de passe incorrect.' })
   

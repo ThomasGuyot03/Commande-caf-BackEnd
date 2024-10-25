@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 
       // Attache l'userId à la requête pour une utilisation future
       req.userId = userId;
-
+      req.accountId = user.accountId
       // Si une route nécessite que l'ID utilisateur soit dans le body
       if (req.body.userId && req.body.userId !== userId) {
         return res.status(401).json({ error: "Requête non autorisée : ID utilisateur non valide." });
