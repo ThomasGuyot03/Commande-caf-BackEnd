@@ -29,11 +29,6 @@ app.use((req, res, next) => {
     next()
 })
 
-// Middleware CORS
-// app.use(cors({
-//   origin: 'http://thomasguyot.local:8080' // Changez ceci si nécessaire
-// }));
-
 app.use(bodyParser.json())
 app.use(morgan(':method :url :status :response-time ms :date :referrer'))
 app.use("/api", api)
