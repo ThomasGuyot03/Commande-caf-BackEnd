@@ -15,7 +15,7 @@ const getTotalPrice = (panier) => {
     return amount
 }
 
-function templateOrder(products, totalPrice) {
+function templateOrder(products,  user = null) {
     let rows = ''
     for (const product of products) {
         const { name, price, quantity } = product
@@ -27,9 +27,16 @@ function templateOrder(products, totalPrice) {
         `
     }
 
-    let template = fs.readFileSync("./templates/order-template.html", 'utf8')
+    let template = user ? fs.readFileSync("./templates/admin-order-template.html", 'utf8') : fs.readFileSync("./templates/order-template.html", 'utf8')
     template = template.replace('{{rows}}', rows)
-
+    if (user) {
+        console.log("user",user)
+        template = template.replace('{{name}}', user.name + " " + user.firstname)
+        template = template.replace('{{email}}', user.email)
+        const address = `${user.address.line} ${user.address.zip_code} ${user.address.city}`
+        console.log("adresse",address)
+        template = template.replace('{{address}}', address)
+    }
     return template
 }
 
