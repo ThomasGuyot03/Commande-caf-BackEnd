@@ -24,8 +24,8 @@ router.patch('/user/update/:id', auth, userControllers.updateUser);
 router.get('/user/profile', auth, userControllers.getProfile); 
 router.get('/user/:id', auth, userControllers.getUser);
 router.get('/users', auth, userControllers.getAllUsers); 
-router.post('/user/reset-password', userControllers.resetPassword);
-router.post('/user/reset-password/:id', userControllers.resetPasswordId);
+// router.post('/user/reset-password', userControllers.resetPassword);
+// router.post('/user/reset-password/:id', userControllers.resetPasswordId);
 
 // products //
 router.post('/products/create', auth, isAdmin, multer, productControllers.createProduct);

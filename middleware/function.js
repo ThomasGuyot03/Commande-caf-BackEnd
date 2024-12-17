@@ -89,4 +89,4 @@ function templateOrder(products, user = null) {
 //     }
 // }
 
-module.exports = { getTotalPrice, templateOrder, getTransporterMail };
+// module.exports = { getTotalPrice, templateOrder, getTransporterMail };
