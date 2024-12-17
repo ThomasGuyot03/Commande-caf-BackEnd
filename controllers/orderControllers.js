@@ -2,7 +2,7 @@ const models = require("../models/models")
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 const stripe = require('stripe')(stripeSecretKey)
 const cryptoJS = require("crypto-js")
-const { templateOrder, getTransporterMail } = require("../middleware/function")
+const { getTotalPrice, templateOrder, getTransporterMail } = require("../middleware/function")
 const { findAccount } = require("../middleware/account")
 
 // CREATE ORDER //
@@ -10,35 +10,29 @@ exports.createOrder = async (req, res, next) => {
     const { cart } = req.body
     if (req.body.user === "" || cart.products.length === 0)
         return res.status(400).json({ error: 'Merci de remplir tous les champs.' })
-    const { name, firstname, email, address } = req.body.user
+
+    const { name, email, address } = req.body.user
+    const totalPrice = getTotalPrice(cart)
 
     try {
         const accountId = findAccount(req)
-        const userData = { name, email, address, firstname }
         const order = await models.Order.create({
-            user: userData,
+            user: { name, email, address },
             products: cart.products,
             accountId
         })
 
-        // let template = templateOrder(cart.products)
-        // const transporter = await getTransporterMail()
-        // const mailOptions = {
-        //     from: 'datcommande@gmail.com',
-        //     to: email,
-        //     subject: 'Confirmation de commande',
-        //     html: template
-        // }
-        // // transporter.sendMail(mailOptions)
-        // let templateAdmin = templateOrder(cart.products, userData)
-        // const adminMailOptions = {
-        //     from: 'datcommande@gmail.com',
-        //     to: 'datcommande@gmail.com',
-        //     subject: 'Confirmation de commande',
-        //     html: templateAdmin
-        // }
-        // // transporter.sendMail(adminMailOptions)
-        // return res.status(200).json(order)
+        let template = templateOrder(cart.products, totalPrice)
+        const transporter = await getTransporterMail()
+        const mailOptions = {
+            from: 'guillaumeleger430@gmail.com',
+            to: email,
+            subject: 'Confirmation de commande',
+            html: template
+        }
+        transporter.sendMail(mailOptions)
+
+        return res.status(200).json(order)
     } catch (error) {
         console.log('error =>', error)
         return res.status(400).json({ error: error.message })
