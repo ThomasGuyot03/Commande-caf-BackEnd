@@ -14,38 +14,38 @@ exports.createOrder = async (req, res, next) => {
     const { name, firstname, email, address } = req.body.user
     const totalPrice = getTotalPrice(cart)
 
-    try {
-        const accountId = findAccount(req)
-        const userData = { name, email, address, firstname }
-        const order = await models.Order.create({
-            user: userData,
-            products: cart.products,
-            accountId
-        })
+//     try {
+//         const accountId = findAccount(req)
+//         const userData = { name, email, address, firstname }
+//         const order = await models.Order.create({
+//             user: userData,
+//             products: cart.products,
+//             accountId
+//         })
 
-        let template = templateOrder(cart.products)
-        const transporter = await getTransporterMail()
-        const mailOptions = {
-            from: 'datcommande@gmail.com',
-            to: email,
-            subject: 'Confirmation de commande',
-            html: template
-        }
-        // transporter.sendMail(mailOptions)
-        let templateAdmin = templateOrder(cart.products, userData)
-        const adminMailOptions = {
-            from: 'datcommande@gmail.com',
-            to: 'datcommande@gmail.com',
-            subject: 'Confirmation de commande',
-            html: templateAdmin
-        }
-        // transporter.sendMail(adminMailOptions)
+//         let template = templateOrder(cart.products)
+//         const transporter = await getTransporterMail()
+//         const mailOptions = {
+//             from: 'datcommande@gmail.com',
+//             to: email,
+//             subject: 'Confirmation de commande',
+//             html: template
+//         }
+//         // transporter.sendMail(mailOptions)
+//         let templateAdmin = templateOrder(cart.products, userData)
+//         const adminMailOptions = {
+//             from: 'datcommande@gmail.com',
+//             to: 'datcommande@gmail.com',
+//             subject: 'Confirmation de commande',
+//             html: templateAdmin
+//         }
+//         // transporter.sendMail(adminMailOptions)
 
-        return res.status(200).json(order)
-    } catch (error) {
-        console.log('error =>', error)
-        return res.status(400).json({ error: error.message })
-    }
+//         return res.status(200).json(order)
+//     } catch (error) {
+//         console.log('error =>', error)
+//         return res.status(400).json({ error: error.message })
+//     }
 }
 
 // UPDATE ORDER //
