@@ -10,7 +10,6 @@ exports.createOrder = async (req, res, next) => {
     const { cart } = req.body
     if (req.body.user === "" || cart.products.length === 0)
         return res.status(400).json({ error: 'Merci de remplir tous les champs.' })
-    console.log("test req.body.user",req.body.user)
     const { name, firstname, email, address } = req.body.user
 
     try {
@@ -22,25 +21,24 @@ exports.createOrder = async (req, res, next) => {
             accountId
         })
 
-        let template = templateOrder(cart.products)
-        const transporter = await getTransporterMail()
-        const mailOptions = {
-            from: 'datcommande@gmail.com',
-            to: email,
-            subject: 'Confirmation de commande',
-            html: template
-        }
-        // transporter.sendMail(mailOptions)
-        let templateAdmin = templateOrder(cart.products, userData)
-        const adminMailOptions = {
-            from: 'datcommande@gmail.com',
-            to: 'datcommande@gmail.com',
-            subject: 'Confirmation de commande',
-            html: templateAdmin
-        }
-        // transporter.sendMail(adminMailOptions)
-
-        return res.status(200).json(order)
+        // let template = templateOrder(cart.products)
+        // const transporter = await getTransporterMail()
+        // const mailOptions = {
+        //     from: 'datcommande@gmail.com',
+        //     to: email,
+        //     subject: 'Confirmation de commande',
+        //     html: template
+        // }
+        // // transporter.sendMail(mailOptions)
+        // let templateAdmin = templateOrder(cart.products, userData)
+        // const adminMailOptions = {
+        //     from: 'datcommande@gmail.com',
+        //     to: 'datcommande@gmail.com',
+        //     subject: 'Confirmation de commande',
+        //     html: templateAdmin
+        // }
+        // // transporter.sendMail(adminMailOptions)
+        // return res.status(200).json(order)
     } catch (error) {
         console.log('error =>', error)
         return res.status(400).json({ error: error.message })
