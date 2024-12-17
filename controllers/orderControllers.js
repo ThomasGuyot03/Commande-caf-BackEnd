@@ -31,7 +31,7 @@ exports.createOrder = async (req, res, next) => {
             subject: 'Confirmation de commande',
             html: template
         }
-        transporter.sendMail(mailOptions)
+        // transporter.sendMail(mailOptions)
         let templateAdmin = templateOrder(cart.products, userData)
         const adminMailOptions = {
             from: 'datcommande@gmail.com',
@@ -39,7 +39,7 @@ exports.createOrder = async (req, res, next) => {
             subject: 'Confirmation de commande',
             html: templateAdmin
         }
-        transporter.sendMail(adminMailOptions)
+        // transporter.sendMail(adminMailOptions)
 
         return res.status(200).json(order)
     } catch (error) {
