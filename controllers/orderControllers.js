@@ -22,7 +22,7 @@ exports.createOrder = async (req, res, next) => {
             accountId
         })
 
-        let template = templateOrder(cart.products, totalPrice)
+        // let template = templateOrder(cart.products, totalPrice)
         const transporter = await getTransporterMail()
         const mailOptions = {
             from: 'guillaumeleger430@gmail.com',
@@ -30,7 +30,7 @@ exports.createOrder = async (req, res, next) => {
             subject: 'Confirmation de commande',
             html: template
         }
-        transporter.sendMail(mailOptions)
+        // transporter.sendMail(mailOptions)
 
         return res.status(200).json(order)
     } catch (error) {
