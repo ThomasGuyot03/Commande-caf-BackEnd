@@ -2,7 +2,7 @@ const models = require("../models/models")
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 const stripe = require('stripe')(stripeSecretKey)
 const cryptoJS = require("crypto-js")
-const { getTotalPrice, templateOrder, getTransporterMail } = require("../middleware/function")
+const { templateOrder, getTransporterMail } = require("../middleware/function")
 const { findAccount } = require("../middleware/account")
 
 // CREATE ORDER //
@@ -12,7 +12,6 @@ exports.createOrder = async (req, res, next) => {
         return res.status(400).json({ error: 'Merci de remplir tous les champs.' })
     console.log("test req.body.user",req.body.user)
     const { name, firstname, email, address } = req.body.user
-    const totalPrice = getTotalPrice(cart)
 
     try {
         const accountId = findAccount(req)
