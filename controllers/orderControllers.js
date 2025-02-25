@@ -7,37 +7,30 @@ const { findAccount } = require("../middleware/account")
 
 // CREATE ORDER //
 exports.createOrder = async (req, res, next) => {
-    const { cart } = req.body
+    const { cart } = req.body;
     if (req.body.user === "" || cart.products.length === 0)
-        return res.status(400).json({ error: 'Merci de remplir tous les champs.' })
+        return res.status(400).json({ error: 'Merci de remplir tous les champs.' });
 
-    const { name, email, address } = req.body.user
-    const totalPrice = getTotalPrice(cart)
+    const { name, email, address } = req.body.user;
+    const totalPrice = getTotalPrice(cart);
 
     try {
-        const accountId = findAccount(req)
+        const accountId = findAccount(req);
         const order = await models.Order.create({
             user: { name, email, address },
             products: cart.products,
             accountId
-        })
+        });
 
-        // let template = templateOrder(cart.products, totalPrice)
-        // const transporter = await getTransporterMail()
-        // const mailOptions = {
-        //     from: 'guillaumeleger430@gmail.com',
-        //     to: email,
-        //     subject: 'Confirmation de commande',
-        //     html: template
-        // }
-        // transporter.sendMail(mailOptions)
+        // Générer et envoyer l'email de confirmation
+        await sendOrderEmail(cart, req.body.user); // Envoie l'email après création de la commande
 
-        return res.status(200).json(order)
+        return res.status(200).json(order);
     } catch (error) {
-        console.log('error =>', error)
-        return res.status(400).json({ error: error.message })
+        console.log('error =>', error);
+        return res.status(400).json({ error: error.message });
     }
-}
+};
 
 // UPDATE ORDER //
 exports.updateOrder = async (req, res, next) => {
