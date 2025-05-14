@@ -23,9 +23,9 @@ exports.createOrder = async (req, res, next) => {
         });
 
         // Générer et envoyer l'email de confirmation
-        await sendOrderEmail(cart, req.body.user); // Envoie l'email après création de la commande
+        // await sendOrderEmail(cart, req.body.user); // Envoie l'email après création de la commande
 
-        return res.status(200).json(order);
+        // return res.status(200).json(order);
     } catch (error) {
         console.log('error =>', error);
         return res.status(400).json({ error: error.message });
