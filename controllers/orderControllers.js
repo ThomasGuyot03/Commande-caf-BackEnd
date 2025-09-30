@@ -22,15 +22,15 @@ exports.createOrder = async (req, res, next) => {
             accountId
         });
 
-        // Générer et envoyer l'email de confirmation
-        // await sendOrderEmail(cart, req.body.user); // Envoie l'email après création de la commande
+        // Ici tu renvoies une réponse explicite
+        return res.status(200).json({ success: true, order });
 
-        return res.status(200).json(order);
     } catch (error) {
         console.log('error =>', error);
         return res.status(400).json({ error: error.message });
     }
 };
+
 
 // UPDATE ORDER //
 exports.updateOrder = async (req, res, next) => {
